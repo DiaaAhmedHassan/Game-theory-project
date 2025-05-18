@@ -40,30 +40,36 @@ class Games:
                 node_labels[node] = node
         return node_labels
 
+    def build_game_tree(self, nodes, edges):
+            game_tree = nx.DiGraph()
+            for node, attrs in nodes:
+                game_tree.add_node(node, **attrs)
+                for u, v, attrs in edges:
+                    game_tree.add_edge(u, v, **attrs)
+            return game_tree
 
     def build_prisoners_dilemma(self, p1_decision, p2_decision, show_plot=False):
-        game_tree = nx.DiGraph()
+        
 
         # create nodes
-        game_tree.add_node("Start", player='p1', label='Start')
-        game_tree.add_node('p1_c', player='p2')
-        game_tree.add_node('p1_d', player='p2')
-
-        # add edges between previous nodes
-        game_tree.add_edge('Start', 'p1_c', action='c')
-        game_tree.add_edge('Start', 'p1_d', action='d')
-
-        game_tree.add_node('cc', payoff=(5, 5))
-        game_tree.add_node('cd', payoff=(0, 20))
-        game_tree.add_node('dc', payoff=(20, 0))
-        game_tree.add_node('dd', payoff=(1, 1))
-
-        # add edges
-        game_tree.add_edge('p1_c', 'cc', action='c')
-        game_tree.add_edge('p1_c', 'cd', action='d')
-        game_tree.add_edge('p1_d', 'dc', action='c')
-        game_tree.add_edge('p1_d', 'dd', action='d')
-
+        nodes = [
+            ("Start", {'player': 'p1', 'label': 'Start'}),
+            ('p1_c', {'player': 'p2'}),
+            ('p1_d', {'player': 'p2'}),
+            ('cc', {'payoff': (5, 5)}),
+            ('cd', {'payoff': (0, 20)}),
+            ('dc', {'payoff': (20, 0)}),
+            ('dd', {'payoff': (1, 1)}),
+        ]
+        edges = [
+            ('Start', 'p1_c', {'action': 'c'}),
+            ('Start', 'p1_d', {'action': 'd'}),
+            ('p1_c', 'cc', {'action': 'c'}),
+            ('p1_c', 'cd', {'action': 'd'}),
+            ('p1_d', 'dc', {'action': 'c'}),
+            ('p1_d', 'dd', {'action': 'd'}),
+        ]
+        game_tree = self.build_game_tree(nodes, edges)
         node_labels = Games().add_labels(game_tree)
         
         pos = {
@@ -105,24 +111,27 @@ class Games:
             return (1, 1)
         
     def build_battle_of_sexes(self, m, w, show_plot = False):
-        game_tree = nx.DiGraph()
+        nodes = [
+            ('Start', {'player': 'm', 'label': 'Start'}), 
+            ('m_f', {'player': 'w'}),
+            ('m_b', {'player': 'w'}), 
+            ('ff', {'payoff': (3, 2)}), 
+            ('fb', {'payoff': (0, 0)}), 
+            ('bf', {'payoff': (0, 0)}), 
+            ('bb', {'payoff': (2, 3)}), 
+        ]
 
-        game_tree.add_node('Start', player= 'm', label='Start')
-        game_tree.add_node('m_f', player='w')
-        game_tree.add_node('m_b', player='w')
+        edges = [
+            ('Start', 'm_f', {'action': 'f'}), 
+            ('Start', 'm_b', {'action': 'b'}), 
+            ('m_f', 'ff', {'action': 'f'}), 
+            ('m_f', 'fb', {'action': 'b'}), 
+            ('m_b', 'bf', {'action': 'f'}), 
+            ('m_b', 'bb', {'action': 'b'}), 
+        ]
 
-        game_tree.add_edge('Start', 'm_f', action='f')
-        game_tree.add_edge('Start', 'm_b', action='b')
+        game_tree = self.build_game_tree(nodes, edges)
 
-        game_tree.add_node('ff', payoff=(3, 2))
-        game_tree.add_node('fb', payoff=(0, 0))
-        game_tree.add_node('bf', payoff=(0, 0))
-        game_tree.add_node('bb', payoff=(2, 3))
-        
-        game_tree.add_edge('m_f', 'ff', action='f')
-        game_tree.add_edge('m_f', 'fb', action='b')
-        game_tree.add_edge('m_b', 'bf', action='f')
-        game_tree.add_edge('m_b', 'bb', action='b')
 
         node_labels = Games().add_labels(game_tree)
 
@@ -161,12 +170,161 @@ class Games:
             return (0, 0)
         elif m=='b' and w=='b':
             return (2, 3)
+    
+    def build_matching_pennies(self, p1, p2, show_plot):
+        
+        nodes = [
+            ('Start', {'player': 'p1', 'label': 'Start'}), 
+            ('p1_h', {'player': 'p2'}), 
+            ('p1_t', {'player': 'p2'}), 
+            ('hh', {'payoff': (1, -1)}), 
+            ('ht', {'payoff': (-1, 1)}), 
+            ('th', {'payoff': (-1, 1)}), 
+            ('tt', {'payoff': (1, -1)}), 
+        ]
+
+        edges = [
+            ('Start', 'p1_h', {'action': 'h'}), 
+            ('Start', 'p1_t', {'action': 't'}), 
+            ('p1_h', 'hh', {'action': 'h'}),
+            ('p1_h', 'ht', {'action': 't'}),
+            ('p1_t', 'th', {'action': 'h'}),
+            ('p1_t', 'tt', {'action': 't'}),
+        ]
+
+        game_tree = self.build_game_tree(nodes, edges)
+
+        node_labels = self.add_labels(game_tree)
+
+        pos = {
+            "Start": (0, 2),
+            "p1_h": (-1.5, 1),
+            "p1_t": (1.5, 1),
+            "hh": (-2, 0),
+            "ht": (-1, 0),
+            "th": (1, 0),
+            "tt": (2, 0),
+        }
+
+        highlighted_path = []
+        if p1 == 'h':
+            highlighted_path.append(("Start", "p1_h"))
+            if p2== 'h':
+                highlighted_path.append(("p1_h", "hh"))
+            elif p2 == 't':
+                highlighted_path.append(("p1_h", 'ht'))
+        elif p1 == 't':
+            highlighted_path.append(('Start', 'p1_t'))
+            if p2 == 'h':
+                highlighted_path.append(("p1_t", 'th'))
+            elif p2 == 't':
+                highlighted_path.append(("p1_t", 'tt'))
+        
+        if show_plot:
+            Games().plot_tree(game_tree, pos, node_labels, highlighted_path)
+
+        if p1 == 'h' and p2 == 'h':
+            return (1, -1)
+        elif p1=='h' and p2 == 't':
+            return (-1, 1)
+        elif p1=='t' and p2 == 'h':
+            return (-1, 1)
+        elif p1 == 't' and p2=='t':
+            return (1, -1)
+        
+    def build_hawk_dove(self, p1, p2, show_plot = False):
+
+        nodes = [
+            ('Start', {'player': 'p1', 'label': 'Start'}), 
+            ('p1_h', {'player': 'p2'}),
+            ('p1_d', {'player': 'p2'}), 
+            ('hh', {'payoff': (-5, -5)}), 
+            ('hd', {'payoff': (40, 0)}), 
+            ('dh', {'payoff': (0, 40)}), 
+            ('dd', {'payoff': (20, 20)})
+        ]
+
+        edges = [
+            ('Start', 'p1_h', {'action': 'h'}), 
+            ('Start', 'p1_d', {'action': 'd'}), 
+            ('p1_h', 'hh', {'action': 'h'}), 
+            ('p1_h', 'hd', {'action': 'd'}), 
+            ('p1_d', 'dh', {'action': 'h'}), 
+            ('p1_d', 'dd', {'action': 'd'}), 
+        ]
+
+        game_tree = self.build_game_tree(nodes, edges)
+        nodes_labels = self.add_labels(game_tree)
+
+        pos = {
+            "Start": (0, 2),
+            "p1_h": (-1.5, 1),
+            "p1_d": (1.5, 1),
+            "hh": (-2, 0),
+            "hd": (-1, 0),
+            "dh": (1, 0),
+            "dd": (2, 0),
+        }
+
+        highlighted_path = []
+        if p1 == 'h':
+            highlighted_path.append(('Start', 'p1_h'))
+            if p2 == 'h':
+                highlighted_path.append(('p1_h', 'hh'))
+            elif p2 == 'd':
+                highlighted_path.append(('p1_h', 'hd'))
+        elif p1 == 'd':
+            highlighted_path.append(('Start', 'p1_d'))
+            if p2 == 'h':
+                highlighted_path.append(('p1_d', 'dh'))
+            elif p2 == 'd':
+                highlighted_path.append(('p1_d', 'dd'))
+        
+        if show_plot:
+            self.plot_tree(game_tree, pos, nodes_labels, highlighted_path)
+        
+        if p1 == 'h' and p2 == 'h':
+            return (-5, -5)
+        elif p1 == 'h' and p2 == 'd':
+            return (40, 0)
+        elif p1 == 'd' and p2 == 'h':
+            return (0, 40)
+        elif p1 == 'd' and p2 == 'd':
+            return (20, 20)
         
 
+##** use this for user input design
 
+# print("Select game to simulate: ")
+# print("Prisoners dilemma (1) \n battle of sexes (2) \n matching penis (3) \n Hawk dove (4) \n")
 
+# selected_game = str(input("Enter your selection: "))
 
-
-payoff = Games().build_battle_of_sexes('f', 'f', False)
-print(payoff)
-payoff = Games().build_battle_of_sexes('f', 'f', True)
+# if selected_game == '1':
+#     print("Start prisoner dilemma scenario. ")
+#     p1 = str(input("Enter prisoner1 decision: "))
+#     p2 = str(input("Enter prisoner2 decision: "))
+#     payoff = Games().build_prisoners_dilemma(p1, p2)
+#     print(f"The payoff of your scenario: {payoff}")
+#     Games().build_prisoners_dilemma(p1, p2, 1)
+# elif selected_game == '2':
+#     print("Start battle of sexes scenario. ")
+#     man = str(input("Enter man decision: "))
+#     woman = str(input("Enter woman decision: "))
+#     payoff = Games().build_battle_of_sexes(man, woman)
+#     print(f"The payoffs of your scenario is: {payoff}")
+#     Games().build_battle_of_sexes(man, woman, 1)
+# elif selected_game == '3':
+#     print("Start matching penis scenario. ")
+#     pens1 = str(input("Enter pens 1 (h/t): "))
+#     pens2 = str(input("Enter pens 2: (h/t): "))
+#     payoff = Games().build_matching_pennies(pens1, pens2)
+#     print(f"The payoffs of your scenario is: {payoff}")
+#     Games().build_battle_of_sexes(pens1, pens2, 1)
+# elif selected_game == '4':
+#     print("Start hawk dove scenario. ")
+#     p1 = str(input("Enter player1 decision: "))
+#     p2 = str(input("Enter player2 decision: "))
+#     payoff = Games().build_battle_of_sexes(p1, p2)
+#     print(f"The payoffs of your scenario is: {payoff}")
+#     Games().build_battle_of_sexes(p1, p2, 1)
