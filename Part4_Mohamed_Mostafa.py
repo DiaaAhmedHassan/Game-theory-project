@@ -124,7 +124,6 @@ def rationalizable_strategies(df):
     return df_rat
 
 
-# --->RUN
 
 print_payoff_matrix(df)
 
