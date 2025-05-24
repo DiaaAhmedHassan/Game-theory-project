@@ -16,6 +16,7 @@ payoff_matrix = {
 # Build the DataFrame
 data = []
 for p1 in strategies_p1:
+    
     row = []
     for p2 in strategies_p2:
         row.append(payoff_matrix[(p1, p2)])

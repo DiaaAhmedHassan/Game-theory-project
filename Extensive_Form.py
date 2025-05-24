@@ -25,6 +25,8 @@ class Games:
                 arrows=True
             )
 
+            
+
         plt.title("Game tree")
         plt.axis('off')
         plt.show()
