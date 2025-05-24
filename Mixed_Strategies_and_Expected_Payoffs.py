@@ -26,11 +26,11 @@ def test_calc_N_payoffs():
     }
 
     mixed_strategies = [
-        {'A1': 0, 'A2': 1},  # Player 1
+        {'A1': 0, 'A2': 1},  # Player 1 (pure strategy)
         {'B1': 0.3, 'B2': 0.7},  # Player 2
     ]
 
     print(calculate_N_payoffs(0, payoff_table, mixed_strategies))  # Player 1's expected payoff
 
-if __name__ == "__main__":
-    test_calc_N_payoffs()
+# if __name__ == "__main__":
+#     test_calc_N_payoffs()

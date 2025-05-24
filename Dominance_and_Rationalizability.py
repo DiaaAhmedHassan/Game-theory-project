@@ -1,20 +1,21 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+sys.dont_write_bytecode = True
 
 # Define the payoff matrix for Prisoner's Dilemma
-strategies_p1 = ['C', 'D']
-strategies_p2 = ['C', 'D']
+# strategies_p1 = ['C', 'D']
+# strategies_p2 = ['C', 'D']
 
-payoff_matrix = {
-    ('C', 'C'): (5, 5),
-    ('C', 'D'): (0, 20),
-    ('D', 'C'): (20, 0),
-    ('D', 'D'): (1, 1),
-}
+# payoff_matrix = {
+#     ('C', 'C'): (5, 5),
+#     ('C', 'D'): (0, 20),
+#     ('D', 'C'): (20, 0),
+#     ('D', 'D'): (1, 1),
+# }
 
-# Convert to DataFrame
-df = pd.DataFrame([[payoff_matrix[(r, c)] for c in strategies_p2] for r in strategies_p1],
-                  index=strategies_p1, columns=strategies_p2)
+# # Convert to DataFrame
+# df = pd.DataFrame([[payoff_matrix[(r, c)] for c in strategies_p2] for r in strategies_p1], index=strategies_p1, columns=strategies_p2)
 
 
 def print_payoff_matrix(df):
@@ -30,11 +31,13 @@ def print_payoff_matrix(df):
     col_labels = df.columns.tolist()
     row_labels = df.index.tolist()
 
-    table = ax.table(cellText=table_data,
-                     rowLabels=row_labels,
-                     colLabels=col_labels,
-                     cellLoc='center',
-                     loc='center')
+    table = ax.table(
+        cellText=table_data,
+        rowLabels=row_labels,
+        colLabels=col_labels,
+        cellLoc='center',
+        loc='center'
+    )
 
     table.auto_set_font_size(False)
     table.set_fontsize(14)
@@ -125,22 +128,22 @@ def rationalizable_strategies(df):
 
 
 
-print_payoff_matrix(df)
+# print_payoff_matrix(df)
 
-print("Checking Strict Dominance...")
-strict_dom_p1 = check_dominance(1, df, 'strict')
-strict_dom_p2 = check_dominance(2, df, 'strict')
+# print("Checking Strict Dominance...")
+# strict_dom_p1 = check_dominance(1, df, 'strict')
+# strict_dom_p2 = check_dominance(2, df, 'strict')
 
-print("\nChecking Weak Dominance...")
-weak_dom_p1 = check_dominance(1, df, 'weak', ignore_strategies=strict_dom_p1)
-weak_dom_p2 = check_dominance(2, df, 'weak', ignore_strategies=strict_dom_p2)
+# print("\nChecking Weak Dominance...")
+# weak_dom_p1 = check_dominance(1, df, 'weak', ignore_strategies=strict_dom_p1)
+# weak_dom_p2 = check_dominance(2, df, 'weak', ignore_strategies=strict_dom_p2)
 
-print("\nBest Responses:")
-br1 = best_responses(1, df)
-br2 = best_responses(2, df)
-print("Player 1:", br1)
-print("Player 2:", br2)
+# print("\nBest Responses:")
+# br1 = best_responses(1, df)
+# br2 = best_responses(2, df)
+# print("Player 1:", br1)
+# print("Player 2:", br2)
 
-print("\nRationalizable Strategies (Remaining Matrix):")
-rat_df = rationalizable_strategies(df)
-print_payoff_matrix(rat_df)
+# print("\nRationalizable Strategies (Remaining Matrix):")
+# rat_df = rationalizable_strategies(df)
+# print_payoff_matrix(rat_df)

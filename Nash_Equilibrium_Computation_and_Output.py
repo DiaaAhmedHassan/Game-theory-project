@@ -1,33 +1,36 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+sys.dont_write_bytecode = True
 
-strategies_p1 = ['C', 'D']
-strategies_p2 = ['C', 'D']
+# strategies_p1 = ['C', 'D']
+# strategies_p2 = ['C', 'D']
 
-payoff_matrix = {
-    ('C', 'C'): (5, 5),
-    ('C', 'D'): (0, 20),
-    ('D', 'C'): (20, 0),
-    ('D', 'D'): (1, 1),
-}
+# payoff_matrix = {
+#     ('C', 'C'): (5, 5),
+#     ('C', 'D'): (0, 20),
+#     ('D', 'C'): (20, 0),
+#     ('D', 'D'): (1, 1),
+# }
 
-df = pd.DataFrame([[payoff_matrix[(r, c)] for c in strategies_p2] for r in strategies_p1],
-                  index=strategies_p1, columns=strategies_p2)
+# df = pd.DataFrame([[payoff_matrix[(r, c)] for c in strategies_p2] for r in strategies_p1], index=strategies_p1, columns=strategies_p2)
 
-fig, ax = plt.subplots()
-ax.axis('off')
-table_data = [[str(cell) for cell in row] for row in df.values]
+# fig, ax = plt.subplots()
+# ax.axis('off')
+# table_data = [[str(cell) for cell in row] for row in df.values]
 
-table = ax.table(cellText=table_data,
-                 rowLabels=df.index,
-                 colLabels=df.columns,
-                 loc='center',
-                 cellLoc='center')
+# table = ax.table(
+#     cellText=table_data,
+#     rowLabels=df.index,
+#     colLabels=df.columns,
+#     loc='center',
+#     cellLoc='center'
+# )
 
-table.scale(1.3, 1.3)
-table.set_fontsize(12)
-plt.title("Prisoner's Dilemma Payoff Matrix")
-plt.show()
+# table.scale(1.3, 1.3)
+# table.set_fontsize(12)
+# plt.title("Prisoner's Dilemma Payoff Matrix")
+# plt.show()
 
 def get_best_responses(df, player_index):
     best_responses = set()
@@ -53,11 +56,11 @@ def find_nash_equilibria(df):
     nash_eq = p1_br.intersection(p2_br)
     return nash_eq
 
-nash_eqs = find_nash_equilibria(df)
+# nash_eqs = find_nash_equilibria(df)
 
-print("=== Nash Equilibria ===")
-if nash_eqs:
-    for eq in nash_eqs:
-        print(f"Strategy: Player 1 = {eq[0]}, Player 2 = {eq[1]}, Payoff = {df.loc[eq[0], eq[1]]}")
-else:
-    print("No pure strategy Nash Equilibrium found.")
+# print("=== Nash Equilibria ===")
+# if nash_eqs:
+#     for eq in nash_eqs:
+#         print(f"Strategy: Player 1 = {eq[0]}, Player 2 = {eq[1]}, Payoff = {df.loc[eq[0], eq[1]]}")
+# else:
+#     print("No pure strategy Nash Equilibrium found.")
